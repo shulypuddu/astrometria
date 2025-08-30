@@ -1,0 +1,116 @@
+Practico 1: los ejercicios con triangulito en negro son los entregables, pide hacer un codigo de python y se entregan en formato latex (usando la plantilla del boletin) 
+(a partir del ejercicio 18) HACER UN ARCHIVO POR CADA EJERCICIO
+
+En el informe podemos linkear el archivo subido al repositorio de github o si es necesario usamos el package listing de latex
+SOLO SI ES NECESARIO
+
+---------------- NOCIONES DE PYTHON -------------------
+
+ES SECUENCIAL
+RECORDAR QUE ARRANCA DE 0
+DIFERENCIA ENTRE MAYÚSCULAS Y MINÚSCULAS
+(a y A no son el mismo objeto)
+ 
+python es lenguaje orientado a objetos por tanto no tiene tanto sentido pensar en variables de la misma forma q en fortran
+
+para obtener mas información sobre cualquier cosa uso:
+nombre? >>> devuelve toda la info q conoce de nombre
+
+type(nombre) >>> devuelve el tipo de nombre
+
+help(tipo_de_nombre) >>> devuelve los métodos asociados a ese objeto.
+
+
+se puede redefinir el tipo de una variable en cualquier momento.
+
+
+-------> para strings:
+.capitalize() == pone la primera letra en mayúscula
+.lower() == todo minúscula
+.upper() == todo mayúscula
+.replace(palabra_existente , nueva_palabra)
+.find('char') == devuelve la posición de dicho char
+.count('char') == devuelve la cantidad de repeticiones de dicho char
+al sumar dos strings (a+b) los concateno
+si puedo multiplicar un string por un entero n devuelve una repetición del string n veces.
+
+f'texto {var}' >> para concatenar una variable a un string
+
+
+-------> para números:
+si definimos una variable como entero = 4 (por ejemplo) lo toma directamente como un entero.
+
+enteros >> int
+reales >> float
+complejos >> complex (usa j en vez de i)
+
+int + int = int
+int / int = float
+int // int = int (osea trunca el resultado)
+int**int = int
+float**int = float
+int**float = float
+abs(float) = float >> para calcular valor absoluto 
+int ⅜ int = int  >> para calcular módulo
+
+
+-------> FUNCIONES:
+sintaxis:: 
+	def nombre_def(arg1,arg2,arg3=val_def) :
+		"""
+		
+		ACA VA EL DOCSTRING
+		La idea es explicar que hace la función y cualquier otro tipo de ayuda necesaria para poer entenderla/utilizarla
+		Aca se explican parámetros de entrada y de salida, funcionamiento y modo de uso
+		
+		
+		"""
+		.
+		.
+		sentencias se distinguen con un tab
+		.
+		.
+NO SE CIERRA
+
+en las variables arg3 ya tiene un valor predefinido y no hace falta darles un valor al llamar la función. 
+Por alguna razón estos deben ir al final.
+
+Para los valores prederteminados respeta la posición de los valores en la definición y si quiero redefinir algún parámetro fuera de este orden se redefine usando arg3=nuevo_valor
+
+
+para llamar la funcion simplemente usamos su nombre con los argumentos queridos.
+	
+se puede aclarar el tipo requerido para una variable (buscar como)
+
+se puede usar funciones existentes en otros arhcivos  usando: 
+	import nombre_archivo 
+tomando q ambos estan en el mismo directorio
+a estos archivos q contienen distintas funciones auxiliares se les llama módulos.	
+
+28/08/2025------------------------------------------------------------------------------
+
+ejercicio 18: hacer un generador de congruencia lineal
+wikipedia tiene una lista de buenos valores que dan aleatoriedad (generador lineal congruencial) 
+2^32 es el numero mas grande que puede definir un número de simple precisión.
+
+epsilon (eps) de la maquina para simple precisión es e-7 aprox. el eps es el numero para el cual la maquina deja de distinguir un numero de otro.
+-------> para listas:
+.append(objeto) = en el objeto 
+
+-------> para graficar:
+'ro' = rojo circulitos
+'o' = circulitos	'-' =linea	'*' =estrella 	'+' , 'x' =cruces
+'.' = punto
+
+
+
+
+
+
+
+	 
+
+
+
+
+
