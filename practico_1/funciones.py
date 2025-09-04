@@ -1,6 +1,6 @@
 import numpy as np
 
-def glc(n,x0, a=57,c=1,m=256):
+def glc_int(n,x0, a=57,c=1,m=256):
     """
     Linear Congruential Generator
      Usando un valor incial genera números aleatorios a partir de operaciones con la congruencia lineal 
@@ -26,7 +26,7 @@ def glc(n,x0, a=57,c=1,m=256):
     
     return x
 
-def glc_int(n,x0, a=57,c=1,m=256):
+def glc(n,x0, a=57,c=1,m=256):
     """
     Linear Congruential Generator
      Usando la funcion glc genera números aleatorios entre 0 y 1 a partir de operaciones con la congruencia lineal
@@ -43,45 +43,124 @@ def glc_int(n,x0, a=57,c=1,m=256):
     Una lista de n números aleatorios entre 0 y 1 
 
     """
-    return np.array(glc(n,x0,a,c,m))/m
+    return np.array(glc_int(n,x0,a,c,m))/m
 
 
-def fib(n,x0, j=24, k=55, m=2**32):
+def fib_int(n,x0, j=24, k=55, m=2**32):
     """
     Generador de Fibonacci con retardo
      Usando un valor incial genera números aleatorios a partir de operaciones con la congruencia lineal y a partir de k numeros aleatorios previamente definidos
 
     --Parámetros--
     todos los parámetros deben son números enteros 
-    
-
-
+    n: cantidad de valores
+    x0: semilla inicial
+    j,k: parametros de retraso ¡Importante!: k > j
+    m : modulo 
 
     --Retorna--
     una lista de n numeros aleatorios 
 
     """
+    numeros =glc(k,x0,a=1664525,c=1013904223,m=2**32)
 
-    numeros = glc(k,x0,a=1664525,c=1013904223,m=2**32)
+
     for i in range(k,k+n): #empieza desde k y va hasta k+n-1
-        numeros.append(((numeros[i-j]+numeros[i-k])%m)/m)
-
+        numeros.append(((numeros[i-j]+numeros[i-k])%m))
+        
     return numeros[k:]
 
-def fib_int(n,x0, j=24, k=55, m=2**32):
+def fib(n,x0, j=24, k=55, m=2**32):
     """
     Generador de Fibonacci con retardo
      Usando la funcion fib genera números aleatorios a partir de operaciones con la congruencia lineal y a partir de k numeros aleatorios previamente definidos
 
     --Parámetros--
-    todos los parámetros deben son números enteros 
-    
-
-
+    todos los parámetros deben son números enteros  
+    n: cantidad de valores
+    x0: semilla inicial
+    j,k: parametros de retraso ¡Importante!: k>j
+    m : modulo 
 
     --Retorna--
     una lista de n numeros aleatorios 
 
     """
 
-    return np.array(fib(x0,n,j,k,m))/m
+    return np.array(fib_int(x0,n,j,k,m))/m
+
+
+
+
+def periodo(lista):
+    """
+    Calcula el periodo de una lista de numeros aleatorios
+
+    --Parámetros--
+    lista: lista de numeros aleatorios
+
+    --Retorna--
+    periodo: periodo de la lista (valor al partir del cual se repiten los números)
+    """
+
+    for i in range(1,len(lista)):
+        if lista[i] == lista[0]:
+            return i
+    return 0 # en caso q no haya repeticiones devuelve 0
+
+
+
+    
+def momentok(k, lista):
+    """
+    Calcula el momento k-esimo de una lista de números
+
+    --Parámetros--
+    k= entero positivo, indica el momento a calcular
+    lista= lista de números (pueden ser enteros o flotantes)
+    
+    --Retorna--
+    Momento k-esimo (numero real) 
+    si k=1 hablamos del valor de expectancia
+
+
+    """
+    _x= np.array(lista)
+    _xk= _x**k    
+    return np.sum(_xk)/len(_xk)
+
+
+
+
+
+def pearson_correlation (x , y ) :
+    """
+    Calcula el coeficiente de correlacion de Pearson entre dos arrays
+
+    Parameters :
+    x, y: arrays de igual longitud
+
+    Returns :
+    r: coeficiente de correlacion de Pearson
+    """
+    # Verificar que tienen la misma longitud
+    if len( x ) != len( y ) :
+        raise ValueError ("Los arrays deben tener la misma longitud ")
+
+    n=len(x)
+
+    # Calcular medias
+    mean_x = np . mean ( x )
+    mean_y = np . mean ( y )
+
+    # Calcular numerador y denominador
+    numerator = np .sum (( x - mean_x ) * ( y - mean_y ) )
+    denominator = np . sqrt ( np .sum (( x - mean_x ) **2) * np .sum (( y - mean_y ) **2) )
+
+    # Evitar division por cero
+    if denominator == 0:
+        return 0
+    return numerator / denominator
+
+
+ 
