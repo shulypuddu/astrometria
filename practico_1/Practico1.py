@@ -5,13 +5,21 @@ import numpy as np
 import time 
 #PRIMERA CELDA CON TODAS LAS LIBRERIAS A USAR
 
+#Valores dados por Numerical Recipes para la funcion glc
+#me asegura un gran rango de números aleatorios antes de q estos fallen
+m=2**32	
+a=1664525
+c=1013904223
+
 #%%
 
-#------------------- Ejercicio 18 Parte (a) -------------------
+#------------------- (GLC) Ejercicio 18 Parte (a) -------------------
 
 # Genero numeros aleatorios
+N=10000 #cantidad de numeros a generar
+
 semilla =10
-numeros = f.glc(1000,semilla)
+numeros = f.glc(N,semilla)
 
 x = numeros[:-1] #toma toda la lista menos el ultimo elemento
 y = numeros[1:] #toma toda la lista menos el primer elemento
@@ -22,22 +30,17 @@ plt.title('Correlación entre pares sucesivos')
 plt.legend()
 plt.show()
 
-
+print('Periodo y momentos de los números generados con GLC:')
 print(f.periodo(numeros))
 print(f.momentok(1,numeros))
 print(f.momentok(3,numeros))
 print(f.momentok(7,numeros))
 print(1/(3+1),1/(7+1))
+
+
+
 #---- Repito el procedimiento con numeros mas bonitos
-
-
-#Valores dados por Numerical Recipes para la funcion glc, me asegura un gran rango de números aleatorios antes de q estos fallen
-
-m=2**32	
-a=1664525
-c=1013904223
-
-nros = f.glc(10,semilla,a,c,m)
+nros = f.glc(N,semilla,a,c,m)
 
 x = nros[:-1] #toma toda la lista menos el ultimo elemento
 y = nros[1:] #toma toda la lista menos el primer elemento
@@ -48,7 +51,7 @@ plt.title('Correlación entre pares sucesivos')
 plt.legend()
 plt.show()
 
-
+print('Periodo y momentos de los números generados con GLC:')
 print(f.periodo(nros))
 print(f.momentok(1,nros))
 print(f.momentok(3,nros))
@@ -58,85 +61,131 @@ print(1/(3+1),1/(7+1))
 #%%
 #------------------- Ejercicio 18 Parte (b) -------------------
 
-def caminos(N,k,x0):
-    """
-    Crea k caminos con N cantidad de pasos
+N_caminatas = 10
+N_pasos = 1000
+#zeros crea un array de numpy con las dimensiones que le paso por parámetro, en este caso 10 filas y 1000 columnas
+x= np.zeros((N_caminatas , N_pasos))
+y= np.zeros((N_caminatas , N_pasos))
+# caminatas == filas pasos== columnas
+for i in range(N_caminatas):
+    for j in range(N_pasos):
+        salto_x= np.random.rand()*2*np.sqrt(2)-np.sqrt(2)
+        x[i,j]= salto_x + x[i,j-1]
+        salto_y= np.random.rand()*2*np.sqrt(2)-np.sqrt(2)
+        y[i,j]= salto_y + y[i,j-1] 
 
-    
-    --Parámetros--
-    Todos los parámetros son enteros
-    N : cantidad de pasos (cant de valores en x e y) que va a tener el camino 
-    k : cantidad de caminos
-    x0 : semilla inicial (solo para generar las semillas iniciales)
-
-
-    --Retorna--
-    N caminos en un rango de -sqrt(2) a sqrt(2)
-    """
-    pasos = []
-    semillas = f.glc(k,x0,a,c,m)
-
-    for j in range(k):
-        dx = []
-        dy = []
-        x = f.glc(N, a, c, m, semillas[j])
-        y =f.glc(N,a, c, m, semillas[j-1])
-        for i in range(N):
-            dx.append(2 * (x[i] - 0.5) * np.sqrt(2))
-            dy.append(2 * (y[i] - 0.5) * np.sqrt(2))
-        X = np.cumsum(dx)
-        Y = np.cumsum(dy)
-        pasos.append((X, Y))
-    return pasos
-
-def valor_exp_camino():
-    return 0
-
-caminos = caminos(1000,10,252)
 plt.figure(figsize=(10, 8))
-for i, (X, Y) in enumerate(caminos):
-    plt.plot(X, Y,'--',label=f'camino numero {i}')
-    plt.scatter(X[0], Y[0])
-    plt.scatter(X[-1], Y[-1])
+for i in range(N_caminatas):
+    plt.plot(x[i], y[i],'-',label=f'camino numero {i}')
+    #plt.plot(x[i,:], y[i,:],'-',label=f'camino numero {i}') es lo mismo
 plt.title(f'Caminatas Aleatorias')
 plt.xlabel('$\Delta X$')
 plt.ylabel('$\Delta Y$')
-plt.grid(True)
+#plt.legend()
 plt.show()
+
+distances = np.sqrt(x**2 + y**2)
+media=np.mean(distances,axis=0) #axis=0 calcula la media a lo largo de las filas, es decir, para cada paso toma las 10 distancias y calcula la media
+#distances.mean(axis=0) es lo mismo que np.mean(distances,axis=0)
+plt.figure(figsize=(10, 8))
+for i in range(N_caminatas):
+    plt.plot(distances[i],'-',label=f'camino numero {i}')
+plt.plot(media,'k-',linewidth=3,label='media')
+plt.xlabel('$Distancia$')
+plt.ylabel('$Pasos$')
+#plt.legend()
+plt.show()
+
+
 
 
 #%%
 #---------------------- Ejercicio 19 ----------------------  
 def ej19f1():
-    x= f.fib(130,16540)
+    x= f.fib(130,2000)
     _x =x[1:]
     _y = x[:-1]
 
     plt.plot(_x,_y,'x',label='pares')
     plt.xlabel('$n_{i}$')
     plt.ylabel('$n_{i+1}$')
-    plt.title('$Titulo$')
+    plt.title('Correlación entre pares sucesivos')
     plt.legend()
     plt.show()
-    print(x)
+   
 
 ej19f1()
 
 y= np.random.random(10)
 print(y)
 
+#%%
+#---------------------- Ejercicio 20 ----------------------  
 
+def pearson_correlation (x,y):
+    """
+    Calcula el coeficiente de correlacion de Pearson entre dos arrays
+    Parameters :
+    x , y : arrays de igual longitud
+    Returns :
+    r : coeficiente de correlacion de Pearson
+    """
+    # Verificar que tienen la misma longitud
+    if len ( x ) != len ( y ) :
+        raise ValueError ( " Los arrays deben tener la misma longitud " )
+    n = len ( x )
+    # Calcular medias
+    mean_x = np . mean ( x )
+    mean_y = np . mean ( y )
+    # Calcular numerador y denominador
+    numerator = np . sum (( x - mean_x ) * ( y - mean_y ) )
+    denominator = np . sqrt ( np . sum (( x - mean_x ) **2) * np . sum (( y - mean_y ) **2) )
+    # Evitar division por cero
+    if denominator == 0:
+        return 0
+    return numerator / denominator
 
+fib_x = f.fib_int(100,100)
+fib_y = f.fib_int(100,10)
+glc_x = f.glc_int(100,10)
+glc_y = f.glc_int(100,100)
+print(pearson_correlation(fib_x,fib_y))
+print(pearson_correlation(glc_x,glc_y)) 
 
 
 
 # %%
-#---------------------- Ejercicio 20 ----------------------  
+#---------------------- Ejercicio 21 ----------------------  
+def Monty_Hall_sin_cambiar(n):
+    """
+    La función simula el juego de Monty Hall sin cambiar de puerta.
+    --Paramámetros--
+    n: número de veces que se repite el experimento
+    
+    --Retorna--
+    Imprime "Ganó" si el jugador gana el auto, "Perdió" si no.
+    
+    """
+    for i in range(n):
+        vector = ['Cabra','Cabra','Auto']
+        np.random.permutation(vector)
+        eleccion = f.glc_int(1,(i+i**3),a,c,m)[0]%3
+        if vector[eleccion] == 'Auto':
+            print('Ganó')
+        else:
+            print('Perdió')
+    
 
-
-
-
-
+def Monty_Hall_cambiando(n):
+    """
+    La función simula el juego de Monty Hall cambiando de puerta.
+    --Paramámetros--
+    n: número de veces que se repite el experimento
+    --Retorna--
+    Imprime "Ganó" si el jugador gana el auto, "Perdió" si no.
+    
+    """
+   return 0
 
 
 
@@ -205,12 +254,19 @@ def dados(N,n0):
     return nros
 
 
-dado_1 = dados(10,int(time.time()))
-dado_2 = dados(10,int(time.time())-3)
-print(dado_1)
-print(dado_2)
+dado_1 = dados(100,int(time.time()))
+dado_2 = dados(100,int(time.time())-3)
+
+#Ahora sumo los resultados de ambos dados
+suma_dados = dado_1 + dado_2
+print(suma_dados)
 
 
 
 
+
+#%%
+
+# np.random.permutation() permuta los elementos de un array de forma aleatoria
+# la lista puede contener elementos tipos string
 

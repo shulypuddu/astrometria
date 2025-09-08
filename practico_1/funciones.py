@@ -28,8 +28,8 @@ def glc_int(n,x0, a=57,c=1,m=256):
 
 def glc(n,x0, a=57,c=1,m=256):
     """
-    Linear Congruential Generator
-     Usando la funcion glc genera números aleatorios entre 0 y 1 a partir de operaciones con la congruencia lineal
+    Generador Lineal Congruencial:
+    Usando la funcion glc genera números aleatorios entre 0 y 1 a partir de operaciones con la congruencia lineal
 
 
     --Parámetros--
@@ -62,12 +62,12 @@ def fib_int(n,x0, j=24, k=55, m=2**32):
     una lista de n numeros aleatorios 
 
     """
-    numeros =glc(k,x0,a=1664525,c=1013904223,m=2**32)
+    numeros =list(glc(k,x0,a=1664525,c=1013904223,m=2**32))
 
 
     for i in range(k,k+n): #empieza desde k y va hasta k+n-1
         numeros.append(((numeros[i-j]+numeros[i-k])%m))
-        
+    
     return numeros[k:]
 
 def fib(n,x0, j=24, k=55, m=2**32):
@@ -163,4 +163,36 @@ def pearson_correlation (x , y ) :
     return numerator / denominator
 
 
- 
+ def caminos(N,k,x0):
+    """
+    Crea k caminos con N cantidad de pasos
+
+    
+    --Parámetros--
+    Todos los parámetros son enteros
+    N : cantidad de pasos (cant de valores en x e y) que va a tener el camino 
+    k : cantidad de caminos
+    x0 : semilla inicial (solo para generar las semillas iniciales)
+
+
+    --Retorna--
+    N caminos en un rango de -sqrt(2) a sqrt(2)
+    """
+    pasos = []
+    semillas = f.glc(k,x0,a,c,m)
+
+    for j in range(k):
+        dx = []
+        dy = []
+        x = f.glc(N, a, c, m, semillas[j])
+        y =f.glc(N,a, c, m, semillas[j-1])
+        for i in range(N):
+            dx.append(2 * (x[i] - 0.5) * np.sqrt(2))
+            dy.append(2 * (y[i] - 0.5) * np.sqrt(2))
+        X = np.cumsum(dx)
+        Y = np.cumsum(dy)
+        pasos.append((X, Y))
+    return pasos
+
+
+
