@@ -255,11 +255,12 @@ espiral = galaxia[1]/1000*100
 enan = galaxia[2]/1000*100
 irr = galaxia[3]/1000*100
 
-print(f'El porcentaje de galaxias elípticas es {elip} %')
-print(f'El porcentaje de galaxias espirales es {espiral} %')
-print(f'El porcentaje de galaxias enanas es {enan} %')      
-print(f'El porcentaje de galaxias irregulares es {irr} %')
-
+plt.figure(figsize=(8,5))
+plt.bar(['Elíptica','Espiral','Enana','Irregular'],[elip,espiral,enan,irr],color='lightblue',edgecolor='skyblue')
+plt.xlabel('Tipo de galaxia')
+plt.ylabel('Porcentaje')
+plt.title('Porcentaje de tipos de galaxias generadas')
+plt.show()
 
 #%%
 #---------------------- Ejercicio 23 ----------------------  
@@ -274,28 +275,50 @@ plt.xlabel('Variable aleatoria')
 plt.ylabel('Probabilidad teórica')
 plt.show()
 
+n = 10000
+# Generamos valores para ambos dados
+dado_1 = f.dados(n,252)
+dado_2 = f.dados(n,255)
+# Sumamos los valores
+suma = np.zeros(n)
+for i in range(n):
+  suma[i] = dado_1[i] + dado_2[i]
 
+# Distribución empírica
+suma_empirica, frec_empirica = np.unique(suma,return_counts=True)
+prob_empirica = frec_empirica / n
 
-dado_1 = f.dados(100,int(time.time()))
-dado_2 = f.dados(100,int(time.time()))
-
-#Ahora sumo los resultados de ambos dados
-suma_dados =[]
-for i in range(len(dado_1)):
-    suma_dados.append(dado_1[i]+dado_2[i])
- 
-dist_porcentual = np.array(dist_probabilidad)*100
-valores, conteos = np.unique(suma_dados, return_counts=True)
-plt.figure(figsize=(8,5))
-plt.bar(var_al,dist_porcentual,width=1,color='lawngreen',edgecolor='limegreen')
-plt.bar(valores,conteos,width=1,color='hotpink',edgecolor='pink')
-plt.xlabel('Variable aleatoria')
-plt.ylabel('Probabilidad teórica')
+# Comparar la distribución empírica con la teórica
+plt.figure(figsize=(10, 6))
+plt.bar(var_al - 0.2, dist_probabilidad, width=0.4, label='Teórica', color='lawngreen')
+plt.bar(suma_empirica + 0.2, prob_empirica, width=0.4, label='Empírica', color='hotpink')
+plt.xlabel('Suma de los dados')
+plt.ylabel('Probabilidad')
+plt.title('Comparación entre la distribución teórica y empírica')
+plt.legend()
+plt.grid(True)
 plt.show()
 
 
+# Generamos valores para ambos dados
+_dado = f.dado_doble(n)
 
-print(suma_dados)
+
+# Distribución empírica
+suma2_empirica, frec2_empirica = np.unique(_dado,return_counts=True)
+prob2_empirica = frec2_empirica / n
+
+# Comparar la distribución empírica con la teórica
+plt.figure(figsize=(10, 6))
+plt.bar(var_al - 0.2, dist_probabilidad, width=0.4, label='Teórica', color='lawngreen')
+plt.bar(suma2_empirica + 0.2, prob2_empirica, width=0.4, label='Empírica', color='hotpink')
+plt.xlabel('Usando dado doble (2-12)')
+plt.ylabel('Probabilidad')
+plt.title('Comparación entre la distribución teórica y empírica')
+plt.legend()
+plt.grid(True)
+plt.show()
+
 
 
 #%%

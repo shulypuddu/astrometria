@@ -169,25 +169,29 @@ def pearson_correlation (x , y ) :
     return numerator / denominator
 
 
-def dados(N,x0):
+def dados(N,x0=252):
     """
     --Parámetros--
     N : cantidad de tiradas
     
     --Retorna--
-    lista de N valores entre 0 y 6
+    lista de N valores entre 1 y 6
     """
     nros=[]
+    numero=0
     m=2**32	
     a=1664525
     c=1013904223
-    _nros= glc(N,x0,a,c,m)
-    for i in range(len(_nros)):
-        nros.append(int(_nros[i]*6+1))
-
+    _nros= glc_int(N,x0,a,c,m)
+    for i in range(N):
+        numero = 1 + int((_nros[i] / m) * (6 - 1 + 1))
+        nros.append(numero)
     return nros
 
-def dado_doble(N):
+
+    
+
+def dado_doble(N,x0=252):
     """
     --Parámetros--
     N : cantidad de tiradas
@@ -196,13 +200,14 @@ def dado_doble(N):
     --Retorna--
     lista de N valores entre 0 y 6
     """
+    nros=[]
+    numero=0
     m=2**32	
     a=1664525
     c=1013904223
-    nros=[]
-    _nros= glc(N,1235598,a,c,m)
-    for i in range(len(_nros)):
-        nros.append(int(_nros[i]*10+1)+2)
+    _nros= glc_int(N,x0,a,c,m)
+    for i in range(N):
+        numero = 2 + int((_nros[i] / m) * (12 - 2 + 1))
+        nros.append(numero)
     return nros
-
 
