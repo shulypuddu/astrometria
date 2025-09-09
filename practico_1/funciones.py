@@ -1,3 +1,4 @@
+
 import numpy as np
 
 def glc_int(n,x0, a=57,c=1,m=256):
@@ -46,7 +47,7 @@ def glc(n,x0, a=57,c=1,m=256):
     return np.array(glc_int(n,x0,a,c,m))/m
 
 
-def fib_int(n,x0, j=24, k=55, m=2**32):
+def fib_int(n, j=24, k=55, m=2**32):
     """
     Generador de Fibonacci con retardo
      Usando un valor incial genera números aleatorios a partir de operaciones con la congruencia lineal y a partir de k numeros aleatorios previamente definidos
@@ -62,15 +63,16 @@ def fib_int(n,x0, j=24, k=55, m=2**32):
     una lista de n numeros aleatorios 
 
     """
-    numeros =list(glc(k,x0,a=1664525,c=1013904223,m=2**32))
-
-
+    x0= np.random.random()
+    numeros =glc_int(k,x0,a=1664525,c=1013904223,m=2**32)
+    
     for i in range(k,k+n): #empieza desde k y va hasta k+n-1
-        numeros.append(((numeros[i-j]+numeros[i-k])%m))
+       nro=(numeros[i-j]+numeros[i-k])
+       numeros.append(nro%m)
     
     return numeros[k:]
 
-def fib(n,x0, j=24, k=55, m=2**32):
+def fib(n, j=24, k=55, m=2**32):
     """
     Generador de Fibonacci con retardo
      Usando la funcion fib genera números aleatorios a partir de operaciones con la congruencia lineal y a partir de k numeros aleatorios previamente definidos
@@ -86,8 +88,12 @@ def fib(n,x0, j=24, k=55, m=2**32):
     una lista de n numeros aleatorios 
 
     """
+    fib=[]
+    for i in range(n):
+        fibfib=fib_int(n,j,k,m)[i]/m
+        fib.append(fibfib)
 
-    return np.array(fib_int(x0,n,j,k,m))/m
+    return fib
 
 
 
@@ -163,36 +169,40 @@ def pearson_correlation (x , y ) :
     return numerator / denominator
 
 
- def caminos(N,k,x0):
+def dados(N,x0):
     """
-    Crea k caminos con N cantidad de pasos
-
-    
     --Parámetros--
-    Todos los parámetros son enteros
-    N : cantidad de pasos (cant de valores en x e y) que va a tener el camino 
-    k : cantidad de caminos
-    x0 : semilla inicial (solo para generar las semillas iniciales)
-
-
+    N : cantidad de tiradas
+    
     --Retorna--
-    N caminos en un rango de -sqrt(2) a sqrt(2)
+    lista de N valores entre 0 y 6
     """
-    pasos = []
-    semillas = f.glc(k,x0,a,c,m)
+    nros=[]
+    m=2**32	
+    a=1664525
+    c=1013904223
+    _nros= glc(N,x0,a,c,m)
+    for i in range(len(_nros)):
+        nros.append(int(_nros[i]*6+1))
 
-    for j in range(k):
-        dx = []
-        dy = []
-        x = f.glc(N, a, c, m, semillas[j])
-        y =f.glc(N,a, c, m, semillas[j-1])
-        for i in range(N):
-            dx.append(2 * (x[i] - 0.5) * np.sqrt(2))
-            dy.append(2 * (y[i] - 0.5) * np.sqrt(2))
-        X = np.cumsum(dx)
-        Y = np.cumsum(dy)
-        pasos.append((X, Y))
-    return pasos
+    return nros
 
+def dado_doble(N):
+    """
+    --Parámetros--
+    N : cantidad de tiradas
+    n0 : semilla inicial
+    
+    --Retorna--
+    lista de N valores entre 0 y 6
+    """
+    m=2**32	
+    a=1664525
+    c=1013904223
+    nros=[]
+    _nros= glc(N,1235598,a,c,m)
+    for i in range(len(_nros)):
+        nros.append(int(_nros[i]*10+1)+2)
+    return nros
 
 

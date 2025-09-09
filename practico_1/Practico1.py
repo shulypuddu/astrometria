@@ -32,9 +32,9 @@ plt.show()
 
 print('Periodo y momentos de los números generados con GLC:')
 print(f.periodo(numeros))
-print(f.momentok(1,numeros))
-print(f.momentok(3,numeros))
-print(f.momentok(7,numeros))
+print(f'Momento k=1: {f.momentok(1,numeros)}')
+print(f'Momento k=3: {f.momentok(3,numeros)}')
+print(f'Momento k=7: {f.momentok(7,numeros)}')
 print(1/(3+1),1/(7+1))
 
 
@@ -53,9 +53,9 @@ plt.show()
 
 print('Periodo y momentos de los números generados con GLC:')
 print(f.periodo(nros))
-print(f.momentok(1,nros))
-print(f.momentok(3,nros))
-print(f.momentok(7,nros))
+print(f'Momento k=1: {f.momentok(1,nros)}')
+print(f'Momento k=3: {f.momentok(3,nros)}')
+print(f'Momento k=7: {f.momentok(7,nros)}')
 print(1/(3+1),1/(7+1))
 
 #%%
@@ -89,68 +89,98 @@ media=np.mean(distances,axis=0) #axis=0 calcula la media a lo largo de las filas
 #distances.mean(axis=0) es lo mismo que np.mean(distances,axis=0)
 plt.figure(figsize=(10, 8))
 for i in range(N_caminatas):
-    plt.plot(distances[i],'-',label=f'camino numero {i}')
+    plt.plot(distances[i],'-')
 plt.plot(media,'k-',linewidth=3,label='media')
 plt.xlabel('$Distancia$')
 plt.ylabel('$Pasos$')
-#plt.legend()
+plt.legend()
 plt.show()
 
+#grafico la media en funcion de la raiz cuadrada del paso
+plt.figure(figsize=(10, 8))
+for i in range(N_caminatas):
+    plt.plot(np.sqrt(range(N_pasos)),distances[i],'-')
+plt.plot(np.sqrt(range(N_pasos)),media,'k-',linewidth=3,label='media')
+plt.xlabel('$\sqrt{N pasos}$')
+plt.ylabel('$Distancia$')
+plt.title('Distancia media en función de la raíz cuadrada del paso')
+plt.legend()
+plt.show()
 
 
 
 #%%
 #---------------------- Ejercicio 19 ----------------------  
-def ej19f1():
-    x= f.fib(130,2000)
-    _x =x[1:]
-    _y = x[:-1]
 
-    plt.plot(_x,_y,'x',label='pares')
-    plt.xlabel('$n_{i}$')
-    plt.ylabel('$n_{i+1}$')
-    plt.title('Correlación entre pares sucesivos')
-    plt.legend()
-    plt.show()
-   
+x= f.fib(10000)
+_x =x[1:]
+_y = x[:-1]
+#Genero un segundo bloque pues f.fib demora mucho en correr con tantos nros
+#%%
+plt.plot(_x,_y,'.',color='hotpink',label='pares')
+plt.xlabel('$n_{i}$')
+plt.ylabel('$n_{i+1}$')
+plt.title('Fibonacci')
+plt.legend()
+plt.show()
 
-ej19f1()
+print('La media de los números generados con Fibonacci es:',np.mean(x))
+print('La varianza de los números generados con Fibonacci es:',np.var(x))
 
-y= np.random.random(10)
-print(y)
+plt.figure(figsize=(8, 5))
+plt.hist(x, bins=np.arange(0, 1.1, 0.1), color='orange', rwidth=0.8)
+plt.xlabel('Valor')
+plt.ylabel('Frecuencia')
+plt.title('Histograma de generador de Fibonacci')
+plt.show()
+
+#%%
+#Ahora repito usando np.random
+y= np.random.random(10000)
+xx =x[1:]
+yy = x[:-1]
+
+plt.plot(xx,yy,'.',color='orange',label='pares')
+plt.xlabel('$n_{i}$')
+plt.ylabel('$n_{i+1}$')
+plt.title('Correlación entre pares sucesivos')
+plt.legend()
+plt.show()
+
+print('La media de los números generados con Numpy.random es:',np.mean(x))
+print('La varianza de los números generados con Numpy.random es:',np.var(x))
+
+plt.figure(figsize=(8, 5))
+plt.hist(y, bins=np.arange(0, 1.1, 0.1), color='hotpink', rwidth=0.8)
+plt.xlabel('Valor')
+plt.ylabel('Frecuencia')
+plt.title('Histograma de Numpy.random')
+plt.show()
+
 
 #%%
 #---------------------- Ejercicio 20 ----------------------  
 
-def pearson_correlation (x,y):
-    """
-    Calcula el coeficiente de correlacion de Pearson entre dos arrays
-    Parameters :
-    x , y : arrays de igual longitud
-    Returns :
-    r : coeficiente de correlacion de Pearson
-    """
-    # Verificar que tienen la misma longitud
-    if len ( x ) != len ( y ) :
-        raise ValueError ( " Los arrays deben tener la misma longitud " )
-    n = len ( x )
-    # Calcular medias
-    mean_x = np . mean ( x )
-    mean_y = np . mean ( y )
-    # Calcular numerador y denominador
-    numerator = np . sum (( x - mean_x ) * ( y - mean_y ) )
-    denominator = np . sqrt ( np . sum (( x - mean_x ) **2) * np . sum (( y - mean_y ) **2) )
-    # Evitar division por cero
-    if denominator == 0:
-        return 0
-    return numerator / denominator
+#Dejo la funcion pearson_correlation junto con el resto de mis funciones
 
 fib_x = f.fib_int(100,100)
 fib_y = f.fib_int(100,10)
 glc_x = f.glc_int(100,10)
 glc_y = f.glc_int(100,100)
-print(pearson_correlation(fib_x,fib_y))
-print(pearson_correlation(glc_x,glc_y)) 
+
+# Lista de retardos
+retardos = [1, 2, 3, 5, 7, 10]
+
+for i in retardos:
+    x_glc = glc_x[:-i]   # quita los últimos d elementos
+    y_glc = glc_y[i:]    # quita los primeros d elementos
+    p_glc = f.pearson_correlation(x_glc, y_glc)
+
+    x_fib = fib_x[:-i]
+    y_fib = fib_y[i:]
+    p_fib = f.pearson_correlation(x_fib, y_fib )
+    print(f'La correlación de Pearson con retardo {i} para GLC es: {p_glc}')
+    print(f'La correlación de Pearson con retardo {i} para el generador de Fibonacci es: {p_fib}')
 
 
 
@@ -185,10 +215,7 @@ def Monty_Hall_cambiando(n):
     Imprime "Ganó" si el jugador gana el auto, "Perdió" si no.
     
     """
-   return 0
-
-
-
+    return n+1
 
 
 #%%
@@ -237,32 +264,38 @@ print(f'El porcentaje de galaxias irregulares es {irr} %')
 #%%
 #---------------------- Ejercicio 23 ----------------------  
 
-def dados(N,n0):
-    """
-    --Parámetros--
-    N : cantidad de tiradas
-    n0 : semilla inicial
-    
-    --Retorna--
-    lista de N valores entre 0 y 6
-    """
-    _nros= f.glc_int(N,n0,a,c,m)
-    nros = np.array(_nros)%6
-    for i in range(len(nros)):
-        if nros[i]== 0:
-            nros[i]=6
-    return nros
+var_al=np.arange(2,13)
+dist_probabilidad=[1/36,1/18,1/12,1/9,5/36,1/6,5/36,1/9,1/12,1/18,1/36]
 
 
-dado_1 = dados(100,int(time.time()))
-dado_2 = dados(100,int(time.time())-3)
+plt.figure(figsize=(8,5))
+plt.bar(var_al,dist_probabilidad,width=1,color='lawngreen',edgecolor='limegreen')
+plt.xlabel('Variable aleatoria')
+plt.ylabel('Probabilidad teórica')
+plt.show()
+
+
+
+dado_1 = f.dados(100,int(time.time()))
+dado_2 = f.dados(100,int(time.time()))
 
 #Ahora sumo los resultados de ambos dados
-suma_dados = dado_1 + dado_2
+suma_dados =[]
+for i in range(len(dado_1)):
+    suma_dados.append(dado_1[i]+dado_2[i])
+ 
+dist_porcentual = np.array(dist_probabilidad)*100
+valores, conteos = np.unique(suma_dados, return_counts=True)
+plt.figure(figsize=(8,5))
+plt.bar(var_al,dist_porcentual,width=1,color='lawngreen',edgecolor='limegreen')
+plt.bar(valores,conteos,width=1,color='hotpink',edgecolor='pink')
+plt.xlabel('Variable aleatoria')
+plt.ylabel('Probabilidad teórica')
+plt.show()
+
+
+
 print(suma_dados)
-
-
-
 
 
 #%%
