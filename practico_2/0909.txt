@@ -1,0 +1,10 @@
+metodo de la transformada inversa se usa siempre que conozcamos la inversa de ladistribución de probabilidad acumulada. 
+
+para conseguir numeros que sigan la distribución GAUSSIANA si o si usar Box-Muller .
+
+------->  Distribución de Fisher-Tippet:
+
+
+
+
+
