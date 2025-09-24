@@ -18,6 +18,20 @@ def t(x,chi,mu,sigma):
     else:
         return (1 + chi*(x-mu)/sigma)**(-1/chi)
 
+def Fisher_Tippet(x,chi,mu,sigma):
+    """
+    Función de densidad de probabilidad de Fisher-Tippet
+
+    --Parámetros--
+    x: valor en el que se evalúa la función
+    chi: parámetro de forma de la distribución
+    mu: parámetro de localización de la distribución
+    sigma: parámetro de escala de la distribución
+
+    --Retorna--
+    f: valor de la función de densidad en x
+    """
+    return (1/sigma)*t(x,chi,mu,sigma)*np.exp(-t(x,chi,mu,sigma))
 
 
 def ac_Fisher_Tippet(x,chi,mu,sigma):
@@ -25,32 +39,52 @@ def ac_Fisher_Tippet(x,chi,mu,sigma):
     Función de distribución acumulativa de Fisher-Tippet
 
     --Parámetros--
+    x: valor en el que se evalúa la función
 
 
     --Retorna--
-
+    F: valor de la función de distribución acumulada en x
     """
-    
-
     return np.exp(-t(x,chi,mu,sigma))
 
 def inv_Fisher_Tippet(u,chi,mu,sigma):
     """
+    Función inversa de la distribución acumulada de Fisher-Tippet
+    --Parámetros--
+    u: valores de entrada (float entre 0 y 1 )
+    chi: parámetro de forma de la distribución
+    mu: parámetro de localización de la distribución
+    sigma: parámetro de escala de la distribución
+
+    --Retorna--
+    x: valor correspondiente a la probabilidad acumulada u
+
     """
         
     if chi !=0:
-        return mu + (sigma/chi)*( ( -np.log(u) )**(-chi) - 1 )
+        return (np.log(-np.log(u))**(-chi)-1)*sigma/chi+mu
     else:
-        return -np.log(np.log(u))*sigma + mu
+        return -np.log(np.log(u)*sigma + mu)
 
 def invCPDF(lambda_val, U):
+    """
+    Función inversa de la distribución acumulada de una distribución de Poisson continua(?)
+
+    --Parámetros--
+    lambda_val: tasa de eventos por unidad de tiempo
+    U: valor(es) de entrada (float entre 0 y 1 )
+
+    --Retorna--
+    t: valor(es) correspondiente(s) al tiempo entre eventos
+    """
     return -(1 / lambda_val) * np.log(1 - U)
 
 
-
-
 def simular_buffon(N, l, t):
-
+    """
+    
+    
+    """
     cruces = 0  # Contador de cuántas veces la aguja toca una raya
 
     for _ in range(N):
