@@ -74,13 +74,6 @@ y= binom.pmf(x)
 m=100
 muestra = np.random.binomial(n, p, size=m)
 
-def chi2(O,E):
-    """
-    O: de la muestra
-    E: de la distribución teórica
-    """
-    test= np.sum((O-E)**2/E)
-    return test
 
 
 plt.hist(y,bins='auto')
