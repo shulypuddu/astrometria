@@ -164,17 +164,33 @@ def chi2(O,E):
             chi2+=(O[i]-E[i])**2/E[i]
     return chi2
 
-def binomial(n,p,k):
+def binomial(n, p, k_max):
     """
     --Parámetros--
-
+    n: número de ensayos
+    p: probabilidad de éxito
+    k_max: número máximo de éxitos a evaluar
+        
     --Retorna--
-    
+    Lista con las probabilidades para k = 0, 1, 2, ..., k_max-1
     """
-    y=[]
-    for i in range(1,k):
-
-         b=np.log(math.factorial(n)) - (np.log(math.factorial(i)) + np.log(math.factorial(n-i))) + i*np.log(p) + (n-i)*np.log(1-p)
-         f= np.exp(b)
-         y.append(f)
+    y = []
+    for k in range(0, k_max):  # Cambio: empezar desde 0, no desde 1
+        if k <= n:  # Solo calcular si k <= n (no puedes tener más éxitos que ensayos)
+            prob = math.comb(n, k) * (p ** k) * ((1 - p) ** (n - k))
+            y.append(prob)
+        else:
+            y.append(0)  # Probabilidad 0 si k > n
     return y
+
+def pvalue(chi,gl):
+    acum=st.chi2.cdf(chi, gl) #acumulada
+    p=1-acum #valor de p
+    return p
+
+def empirica_normal(u):
+    lista=[]
+    for i in range(100):      #veces que sorteo la variable
+        x=st.norm.rvs(loc=u, scale=2.5) #con 2.5 indico el sigma
+        lista.append(x)       #las agrego en una lista
+    return lista

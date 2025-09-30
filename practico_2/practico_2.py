@@ -7,7 +7,8 @@ import scipy.stats as st
 import math 
 #Este primer bloque contiene las importaciones y la configuración inicial para todo el resto.
 #CORRER PRIMERO ESTE BLOQUE SI O SI 
-
+bar_color='lightsteelblue'
+linea_color='tomato'
 
 #%%
 #---------------------------- EJERCICIO 3 ----------------------------#
@@ -33,8 +34,8 @@ print(f"Media teórica: {expected_mean}")
 # Histograma de las muestras
 plt.figure(figsize=(12, 6))
 plt.subplot(1, 2, 1)
-plt.hist(random_samples, bins='auto', color='lightsteelblue', density=True )
-plt.plot(sorted_samples,f.Fisher_Tippet(sorted_samples, xi=xi, mu=mu, sig=sig), '--',color='tomato', label='PDF Teórica')
+plt.hist(random_samples, bins='auto', color=bar_color, density=True )
+plt.plot(sorted_samples,f.Fisher_Tippet(sorted_samples, xi=xi, mu=mu, sig=sig), '--',color=linea_color, label='PDF Teórica')
 plt.title('Números random de Fisher-Tippett')
 plt.xlim(-3.5, 12.75)
 plt.xlabel('Valores')
@@ -177,21 +178,48 @@ plt.show()
 #%%
 #---------------------------- EJERCICIO 10 ---------------------------#
 cant=100 #cantidad de experimentos
-m=100 #cantidad de puntos a cada experimento
-chi=np.zeros(m)
 n =10
 p=0.4
-x=np.arange(m)
-teo_bi_rel=st.binom.pmf(x, n=n, p=p)
-teorica=teo_bi_rel*100
-for i in range(cant):
-    y= np.random.binomial(n,p, size=cant)
-    chi[i]=f.chi2(y,teo_bi_rel)
+x=np.arange(11)
+teorica_dens=st.binom.pmf(x, n=n, p=p)
+teorica=teorica_dens*100
 
-
-plt.hist(y,bins=np.arange(-0.5, 11.5, 1),color='indianred',alpha=0.75)
-plt.bar(x,teorica,color='lightsteelblue',alpha=0.75)
-plt.xlim(-1,10)
+plt.figure(figsize=(10, 6))
+plt.bar(x, teorica_dens, alpha=0.7, color='mediumslateblue', edgecolor='black')
+plt.xlabel('Número de éxitos (k)')
+plt.ylabel('Probabilidad')
+plt.title(f'Distribución Binomial (n={n}, p={p})')
+plt.xticks(x)
+plt.grid(True, alpha=0.3)
 plt.show()
 
-plt.hist(chi,bins='auto')
+lista=np.zeros(100)
+for i in range(100):        #veces que sorteo la variable
+    x=st.binom.rvs(10, 0.4) #da variables aleatorias siguiendo la distribucion binomial
+    lista[i]=x         #las agrego en una lista
+
+hist_result= plt.hist(lista, bins=np.arange(-0.5, 11.5, 1),density=True ,color='mediumslateblue')
+frecuencias_observadas = hist_result[0]  # Las frecuencias están en el primer elemento
+print(f'Las frecuencias observadas son: {frecuencias_observadas}')
+
+chi= f.chi2(frecuencias_observadas,teorica) 
+print(chi)
+
+
+print('El valor-p de la prueba es:', f.pvalue(chi,10))
+
+teorica_norm = 100 * st.binom.pmf(k=np.arange(-4,15,1), n=10, p=0.4)
+frec_norm=[]
+plt.figure(figsize=(17,7))
+
+for i in [1,2,3,4,5,6]:  #posición en el gráfico
+    plt.subplot(2,3,i)   #figura con 2 filas y 3 columnas
+    
+    #Grafico la binomial teorica
+    plt.bar(np.arange(-4,15,1), teorica_norm, width=1, color='blue', alpha=0.5, label='Binomial')
+    
+    #Grafico las distintas normales, quiero mu=2,3,4,5,6,7
+    h=plt.hist(f.empirica_normal(i+1), bins=np.arange(-4.5, 15.5, 1), histtype='step', ec='red', label='Normal: $\mu$ = '+ str(i+1))
+    plt.legend(loc='best')
+    frec_norm.append(h) #agrego las frecuencias a una lista
+    
