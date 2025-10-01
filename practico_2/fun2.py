@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import factorial
 import math
+import scipy.stats as st
 
 # Acá voy a definir todas las funciones y distribuciones que voy a usar en el práctico 2
 
@@ -75,10 +76,10 @@ def invCPDF(lambda_val, U):
 
     --Parámetros--
     lambda_val: tasa de eventos por unidad de tiempo
-    U: valor(es) de entrada (float entre 0 y 1 )
+    U: valores de entrada (array de floats entre 0 y 1 )
 
     --Retorna--
-    t: valor(es) correspondiente(s) al tiempo entre eventos
+    t: valores correspondientes al tiempo entre eventos
     """
     return -(1 / lambda_val) * np.log(1 - U)
 
@@ -191,6 +192,13 @@ def pvalue(chi,gl):
 def empirica_normal(u):
     lista=[]
     for i in range(100):      #veces que sorteo la variable
+        x=st.norm.rvs(loc=u, scale=2.5) #con 2.5 indico el sigma
+        lista.append(x)       #las agrego en una lista
+    return lista
+
+def empirica_normal_10000(u):
+    lista=[]
+    for i in range(10000):      #veces que sorteo la variable
         x=st.norm.rvs(loc=u, scale=2.5) #con 2.5 indico el sigma
         lista.append(x)       #las agrego en una lista
     return lista
