@@ -1,0 +1,20 @@
+ -- Esta es la selección para mi DataBase utilizo 3 tablas distintas 
+select top 50000 ph.ObjID as ID , ph.ra , ph.dec ,  glx.ra as glx_ra , glx.dec as glx_dec , 
+  sp.z , glx.fracDeV_r ,  
+  (ph.petroMag_u - ph.extinction_u) as u, (ph.petroMag_g - ph.extinction_g) as g, (ph.petroMag_r - ph.extinction_r) as r, 
+  zoo.nvote_std as nvotos , zoo.p_el as elip , zoo.p_cs as esp
+  
+into astrometria
+  
+from PhotoObjAll as ph , 
+  SpecObjAll as sp ,
+  zooVotes as zoo ,
+  Galaxy as glx
+  
+  
+where ph.ObjID = sp.BestObjID 
+  and ph.ObjID = zoo.ObjID
+  and ph.ObjID = glx.ObjID
+  and (ph.petroMag_r - ph.extinction_r) < 17.5
+  and 14.5 < (ph.petroMag_r - ph.extinction_r)
+
