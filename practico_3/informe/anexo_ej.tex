@@ -1,0 +1,99 @@
+\documentclass[twocolumn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage{etoolbox}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{fancyhdr}
+\usepackage{abstract}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+%Ubicacion de los graficos 
+\graphicspath{ {imagenes/} }
+
+% DEFINIR LOS COMANDOS QUE FALTAN
+\providecommand{\apjs}{ApJ Suppl. Ser.}
+\providecommand{\aj}{Astron. J.}
+\providecommand{\apj}{Astrophys. J.}
+\providecommand{\apjl}{Astrophys. J. Lett.}
+\providecommand{\aap}{Astron. Astrophys.}
+\providecommand{\mnras}{Mon. Not. R. Astron. Soc.}
+\providecommand{\pasa}{Publications of the Astronomical Society of Australia}
+% Configuración de página
+\geometry{a4paper, margin=1in}
+
+% Configuración de encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Ejercicios Práctico 3 }
+\fancyhead[R]{\small \thepage}
+\fancyfoot[C]{\footnotesize Astrometría - 2025 - J.M. Puddu }
+
+% Configuración del abstract para una columna
+\renewcommand{\abstractname}{Abstract}
+\setlength{\absleftindent}{0pt}
+\setlength{\absrightindent}{0pt}
+%\date{17 Octubre de 2025}
+\title{Ejercicios practico 3}
+\author{J.M. Puddu \\ FAMAF - Universidad Nacional de Córdoba - Argentina}
+\date{17 de Octubre de 2025}
+
+\begin{document}
+
+\twocolumn[
+\begin{@twocolumnfalse}
+    \maketitle
+    \vspace{2em} % Espacio después del abstract
+\end{@twocolumnfalse}
+]
+
+\section{Ejercicio 6}
+\textbf{Enunciado:}
+\textit{Deduzca las fórmulas para los coeficientes del ajuste lineal a un conjunto de puntos ($x$,$y$). Discuta las diferencias de asumir errores en los valores $x$ o $y$. }\\
+
+\textbf{Resolución:} veáse sección 1.2 del informe  
+
+\section{Ejercicio 7}
+\textbf{Enunciado:}
+\textit{Sean $\theta_1$ y $\theta_2$ dos estimadores insesgados para el parámetro $\theta*$, y sea $\alpha$ una constante. Demuestre que
+$\theta=\alpha\theta_1+(1-\alpha)\theta_2$ es también un estimador insesgado para $\theta*$.}\\
+
+\textbf{Resolución:} ya se definió que un parámetro insesgado cumple con que $\langle\phi\rangle= \phi^*$ por lo que podemos ver que si tenemos $\theta_1$ y $\theta_2$ parámetros insesgados y conociendo las propiedades del promedio
+\[
+\langle\theta\rangle= \langle\alpha\: \theta_1 + (1-\alpha)\: \theta_2\rangle = \alpha \langle\theta_1\rangle + (1-\alpha)\langle\theta_2\rangle
+\]
+Recordando que $\theta_1$ y $  \theta_2$ son parámetros insesgados podemos reemplazarlo en la ecuación 
+\[
+\langle\theta\rangle= \alpha  \theta^* +(1-\alpha)\theta^*
+\]
+Luego queda claro que $\langle\theta\rangle=\theta^*$ por lo que $\theta$ es un parámetro insesgado.
+
+\section{Ejercicio 8}
+\textbf{Enunciado:}
+\textit{Dada una muestra aleatoria de tamaño $n$ de una población Poisson con parámetro $\lambda>0$, use el método de máxima verosimilitud para encontrar un estimador del parámetro $\lambda$.}\\
+
+\textbf{Resolución:} veáse sección 1.2 del informe  
+
+\section{Ejercicio 9}
+\textbf{Enunciado:}
+\textit{Se sabe que la vida en horas de un foco de 100 watts de cierta marca tiene una distribución aproximadamente normal con desviación estándar de 30 horas. Para una muestra al azar de 50 focos y resultó que la vida media fue de 1550 horas. Construya un intervalo de confianza del $95\%$ para el verdadero promedio de vida de estos focos.}\\
+
+\textbf{Resolución:} Como conocemos que la vida de un foco tiene una aproximación gaussiana y conocemos la media de una muestra podemos armar un intervalo de confianza simplemente evaluando obteniendo los valores de tiempo (o de la variable cuya distribución sea la normal) que marcan los extremos del intervalo que contiene el $95\%$ de la información 
+
+\section{Ejercicio 10}
+\textbf{Enunciado:}
+\textit{Las mediciones del número de cigarros fumados al día por un grupo de diez fumadores es el siguiente: $5, 10, 3, 4, 5, 8, 20, 4, 1, 10$. Realice la prueba de hipótesis $H_0 :\; \mu = 10 $ vs $H_1 :\; \mu < 10$, suponiendo que los datos provienen de una muestra tomada al azar de una población normal con $\sigma = 1.2$. Use un nivel de significancia del $95\%$.}\\
+
+\textbf{Resolución:} veáse sección 1.2 del informe  
+
+
+
+\end{document}
+
+
+
