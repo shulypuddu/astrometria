@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Puddu_JM.aux
+The style file: plainnat.bst
+Database file #1: bibliografia.bib
+Warning--entry type for "SciPy" isn't style-file defined
+--line 192 of file bibliografia.bib
+You've used 8 entries,
+            2984 wiz_defined-function locations,
+            604 strings with 8718 characters,
+and the built_in function-call counts, 3505 in all, are:
+= -- 298
+> -- 146
+< -- 2
++ -- 70
+- -- 43
+* -- 208
+:= -- 624
+add.period$ -- 0
+call.type$ -- 8
+change.case$ -- 49
+chr.to.int$ -- 9
+cite$ -- 8
+duplicate$ -- 249
+empty$ -- 242
+format.name$ -- 62
+if$ -- 684
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 46
+newline$ -- 28
+num.names$ -- 32
+pop$ -- 103
+preamble$ -- 1
+purify$ -- 46
+quote$ -- 0
+skip$ -- 141
+stack$ -- 0
+substring$ -- 130
+swap$ -- 95
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 72
+warning$ -- 0
+while$ -- 28
+width$ -- 0
+write$ -- 79
+(There was 1 warning)

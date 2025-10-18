@@ -56,7 +56,7 @@
 \textbf{Enunciado:}
 \textit{Deduzca las fórmulas para los coeficientes del ajuste lineal a un conjunto de puntos ($x$,$y$). Discuta las diferencias de asumir errores en los valores $x$ o $y$. }\\
 
-\textbf{Resolución:} veáse sección 1.2 del informe  
+\textbf{Resolución:} veáse sección 1.1.4 del informe  
 
 \section{Ejercicio 7}
 \textbf{Enunciado:}
@@ -77,21 +77,43 @@ Luego queda claro que $\langle\theta\rangle=\theta^*$ por lo que $\theta$ es un 
 \textbf{Enunciado:}
 \textit{Dada una muestra aleatoria de tamaño $n$ de una población Poisson con parámetro $\lambda>0$, use el método de máxima verosimilitud para encontrar un estimador del parámetro $\lambda$.}\\
 
-\textbf{Resolución:} veáse sección 1.2 del informe  
+\textbf{Resolución:} Utilizando el método de máxima verosimilitud o principio de máxima probabilidad y conociendo que cada elemento de la muestra sigue una distribución de Poisson, se plantea que:
+\[
+L =\prod_{i=1}^N \frac{\lambda^{x_i}e^{-\lambda}}{x_i!} \Longrightarrow l = \sum_{i=1}^N (ln(\lambda)x_i-ln(x_i!)) - N\lambda
+\]
+
+Ahora calculo el parámetro con probabilidad máxima $\lambda^*$:
+\[
+\frac{\partial l(\lambda^*)}{\partial \lambda}= \sum_{i=1}^N \frac{x_i}{\lambda^*} -N =0 \Longrightarrow  \lambda^*= \frac{\sum_{i=1}^Nx_i}{N}
+\]
+
+Es decir que el mejor estimador para $ \lambda$ es el promedio de la muestra. 
 
 \section{Ejercicio 9}
 \textbf{Enunciado:}
 \textit{Se sabe que la vida en horas de un foco de 100 watts de cierta marca tiene una distribución aproximadamente normal con desviación estándar de 30 horas. Para una muestra al azar de 50 focos y resultó que la vida media fue de 1550 horas. Construya un intervalo de confianza del $95\%$ para el verdadero promedio de vida de estos focos.}\\
 
-\textbf{Resolución:} Como conocemos que la vida de un foco tiene una aproximación gaussiana y conocemos la media de una muestra podemos armar un intervalo de confianza simplemente evaluando obteniendo los valores de tiempo (o de la variable cuya distribución sea la normal) que marcan los extremos del intervalo que contiene el $95\%$ de la información 
+\textbf{Resolución:} Como conocemos que la vida de un foco tiene una aproximación gaussiana y conocemos la media de una muestra podemos armar un intervalo de confianza simplemente evaluando obteniendo los valores de tiempo (o de la variable cuya distribución sea la normal) que marcan los extremos del intervalo que contiene el $95\%$ de la información. Como no tengo ninguna preferencia o interés por las colas de la distribución a derecha o a izquierda, voy a recortar de manera simétrica tomando el parámetro $ \alpha/2=0.025$ para el valor de probabilidad hacia la izquierda y $1-\alpha/2=0.975$ hacia la derecha como mis zonas de rechazo.\\
+
+Utilizando la libreria \textit{scipy} de python calculo dichos valores y obtengo que el intervalo de confianza es: $1.9599(-1,1)$  pero esto es para una gaussiana centrada en $ 0 $ y con $\sigma=1$, para llevarlo al caso de interés tomo que: $ IC= (\bar{x}-1.9599S_{\bar{x}},\bar{x}+1.9599S_{\bar{x}})$ donde $s_{\bar{x}}= \sigma/\sqrt{N}$, recordando los valores del problema se obtiene que:
+\[
+IC= (1542,1558)
+\]
+
 
 \section{Ejercicio 10}
 \textbf{Enunciado:}
 \textit{Las mediciones del número de cigarros fumados al día por un grupo de diez fumadores es el siguiente: $5, 10, 3, 4, 5, 8, 20, 4, 1, 10$. Realice la prueba de hipótesis $H_0 :\; \mu = 10 $ vs $H_1 :\; \mu < 10$, suponiendo que los datos provienen de una muestra tomada al azar de una población normal con $\sigma = 1.2$. Use un nivel de significancia del $95\%$.}\\
 
-\textbf{Resolución:} veáse sección 1.2 del informe  
+\textbf{Resolución:} El problema también se basa en entender el testeo de hipótesis, los intervalos de confianza y las zonas de rechazo, ahora en este caso como no es de interes que $ \mu>10 $ vamos a definir la zona de rechazo como solamente la región que se encuentra por debajo del $5\%$ de los datos, es decir que usando $\alpha=0.05$ voy a cortar solo por izquierda. \\
+Para hacer la prueba de hipótesis necesito conocer el estadístico de prueba es decir el valor para el cual rechazo o no la hipótesis nula:
 
+\[
+z= \frac{\bar{x}-\mu_0}{\sigma/\sqrt{N}}
+\]
 
+Este se va a comparar con el valor de tabla para un dado $  \alpha$, en este caso $  \alpha=0.05 \Rightarrow z_{\alpha}=-1.645$, si $z<z_{\alpha}$ entonces se rechaza $H_0$ en favor de l hipótesis alternativa. 
+Al calcular $ z$ obtenemos $ -7.90 $ que es mucho menor que $z_{\alpha}$ por lo que se rechaza la hipótesis nula, por lo que podemos afirmar que $\mu$ la media de la población es menor a 10. 
 
 \end{document}
 

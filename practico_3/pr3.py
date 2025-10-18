@@ -72,8 +72,8 @@ def doble_gaussiana(x, amp1, mu1, sigma1, amp2, mu2, sigma2):
 def gauss(x,amp,mu,sigma):
     return amp * np.exp(-(x - mu)**2 / (2 * sigma**2))
 
-
-cuentas, bordes = np.histogram(ur, bins=1000,density=True)
+chi=[]
+cuentas, bordes = np.histogram(ur, bins=50,density=True)
 centros = (bordes[:-1] + bordes[1:]) / 2
 
 # Estimaciones iniciales para los parámetros
@@ -96,25 +96,65 @@ x_cruce = opt.fsolve(diferencia, x_inicial)[0]
 #%% ------------------------------------------------------------------
 #---------- PRIMEROS GRÁFICOS ----------------------------------------
 
-sns.histplot((df['u']-df['r']),bins='auto',alpha=0.75,stat='density')
+gl = 49  # cantidad de bines -1  
+chi_c = st.chi2.ppf((1-0.05), gl)
+p_c = 0.05
+
+# Usar los centros del histograma para ambos
+observadas = cuentas  # frecuencias observadas del histograma
+esperadas = doble_gaussiana(centros, *params)  # frecuencias esperadas del ajuste
+
+# Normalizar para que las sumas coincidan (importante para el test)
+esperadas = esperadas * np.sum(observadas) / np.sum(esperadas)
+
+chi2, p_value1 = st.chisquare(observadas, esperadas)
+
+print(" TEST CHI-CUADRADO PARA BONDAD DE AJUSTE:")
+print(f"   Chi² = {chi2:.4f}, Chi critico = {chi_c:.4f} ")
+print(f"   p-value = {p_value1:.4f}")
+print(f"   Grados de libertad = {gl}")
+print('Usando como test estadístico al valor de p')
+if p_value1 < p_c:
+    print("   RESULTADO: Rechazamos H₀ - El ajuste NO es bueno")
+else:
+    print("   RESULTADO: No rechazamos H₀ - El ajuste es aceptable")
+print('Usando como test estadístico al chi²')
+if chi2 >= chi_c:
+    print("   RESULTADO: Rechazamos H₀ - El ajuste NO es bueno")
+else:
+    print("   RESULTADO: No rechazamos H₀ - El ajuste es aceptable")
+
+sns.histplot((df['u']-df['r']),bins=50,alpha=0.75,stat='density')
 plt.plot(x_fit, doble_gaussiana(x_fit, *params), label='Ajuste Doble Gaussiana', color='darkslategray')
 plt.plot(x1_fit, g_azul,  label='Gaussiana para azules',color=color_a) 
 plt.plot(x2_fit, g_rojo, color=color_r, label='Gaussiana para rojas') 
 plt.xlim(0.25,4.5)
 plt.xlabel('u-r')
+plt.legend()
 plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ur.pdf',dpi=300,bbox_inches='tight')
 plt.show()
+#%%
+#---------- ELIPTICAS Y ESPIRALES --------------------------------------------------------------
 
-sns.histplot((df['g']-df['r']),bins='auto',alpha=0.75,stat='density')
-plt.xlim(0,1.75)
+sns.histplot((elip['u']- elip['r']),bins=100,alpha=0.75,stat='density')
+sns.histplot((esp['u']- esp['r']),bins=100,alpha=0.75,stat='density')
+plt.xlim(0.25,4.5)
 plt.xlabel('g-r')
-plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/gr.pdf',dpi=300,bbox_inches='tight')
+plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ur_morf.pdf',dpi=300,bbox_inches='tight')
 plt.show()  
 
-sns.histplot((df['u']-df['g']),bins='auto',alpha=0.75,stat='density')
+sns.histplot((elip['g']- elip['r']),bins=100,alpha=0.75,stat='density')
+sns.histplot((esp['g']- esp['r']),bins=100,alpha=0.75,stat='density')
+plt.xlim(0,1.75)
+plt.xlabel('g-r')
+plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/gr_morf.pdf',dpi=300,bbox_inches='tight')
+plt.show()  
+
+sns.histplot((elip['u']-elip['g']),bins=100,alpha=0.75,stat='density')
+sns.histplot((esp['u']-esp['g']),bins=100,alpha=0.75,stat='density')
 plt.xlim(0.25,3.75)
 plt.xlabel('u-g')
-plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ug.pdf',dpi=300,bbox_inches='tight')
+plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ug_morf.pdf',dpi=300,bbox_inches='tight')
 plt.show()
 
 
@@ -194,43 +234,90 @@ plt.show()
 
 #%% ------------------------------------------------------------------
 #---------- BULGE Y DISCO ----------------------------------------------------------------
-
+fig, axes = plt.subplots(2, 1,figsize=(8, 12))
 sns.histplot(bulge['elip'],bins='auto',alpha=0.75,stat='density')
 sns.histplot(disco['elip'],bins='auto',alpha=0.75,stat='density')
-plt.xlim(0,1)
-plt.xlabel('elipticas')
-plt.show()
+axes[0].set_xlim(0,1)
+axes[0].set_xlabel('elipticas')
+axes[0].set_title('Histograma del Porcentaje de elipticidad')
 sns.histplot(bulge['esp'],bins='auto',alpha=0.75,stat='density')
 sns.histplot(disco['esp'],bins='auto',alpha=0.75,stat='density')
-plt.xlim(0,1)
-plt.xlabel('espirales')
+axes[1].set_xlim(0,1)
+axes[1].set_xlabel('espirales')
 plt.show()
 
 #---------- ESPIRALES Y ELIPTICAS --------------------------------------------------------
 
-sns.histplot(esp['fracDeV_r'],bins='auto',alpha=0.75)
-plt.xlim(0,1)
-plt.xlabel('fracDeV')
-plt.show()
+fig, axes = plt.subplots(2, 1,figsize=(8, 12))
 
+axes[0].hist(esp['fracDeV_r'],bins=10,alpha=0.75)
 
-sns.histplot(elip['fracDeV_r'],bins=10,alpha=0.75)
-plt.xlim(0,1)
-plt.xlabel('fracDeV')
+axes[0].set_xlabel('fracDeV')
+
+axes[1].hist(elip['fracDeV_r'],bins=10,alpha=0.75)
+
+axes[1].set_xlabel('fracDeV')
 plt.show()
 
 #---------- AJUSTE LINEAL DE UNA MUESTRA --------------------------------------------------------
-plt.figure(figsize=(8, 6))
-sns.scatterplot(x=muestra['g'],y=muestra['r'], alpha=0.6, label='Datos originales')
-plt.plot(muestra['g'], y, color=color_r, alpha=0.8, label=f'Ajuste: r = {a:.3f}g + {b:.3f}')
-plt.ylim(14.25,17.65)
-plt.xlabel('g')
-plt.ylabel('r')
-plt.legend()
-plt.title('Ajuste lineal g vs r')
-plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ajustelineal.pdf',dpi=300,bbox_inches='tight')
+
+a_elip, b_elip = cuad_min(elip['g'], elip['r'])
+y_elip = a_elip * elip['g'] + b_elip
+a_esp, b_esp = cuad_min(esp['g'], esp['r'])
+y_esp = a_esp * esp['g'] + b_esp
+
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+# Primer subplot - Muestra general
+sns.scatterplot(x=muestra['g'], y=muestra['r'], alpha=0.6, label='10% de los Datos originales', ax=axes[0])
+axes[0].plot(muestra['g'], y, color=color_r, alpha=0.8, label=f'Ajuste: r = {a:.3f}g + {b:.3f}')
+axes[0].set_ylim(14.25, 17.65)
+axes[0].set_xlabel('g')
+axes[0].set_ylabel('r')
+axes[0].legend()
+axes[0].set_title('Ajuste lineal g vs r - Muestra general')
+
+# Segundo subplot - Galaxias espirales
+sns.scatterplot(x=esp['g'], y=esp['r'], alpha=0.6, label='Galaxias Espirales', ax=axes[1])
+axes[1].plot(esp['g'], y_esp, color=color_r, alpha=0.8, label=f'Ajuste: r = {a_esp:.3f}g + {b_esp:.3f}')
+axes[1].set_ylim(14.25, 17.65)
+axes[1].set_xlabel('g')
+axes[1].set_ylabel('r')
+axes[1].legend()
+axes[1].set_title('Ajuste lineal g vs r - Espirales')
+
+# Tercer subplot - Galaxias elípticas
+sns.scatterplot(x=elip['g'], y=elip['r'], alpha=0.6, label='Galaxias Elípticas', ax=axes[2])
+axes[2].plot(elip['g'], y_elip, color=color_r, alpha=0.8, label=f'Ajuste: r = {a_elip:.3f}g + {b_elip:.3f}')
+axes[2].set_ylim(14.25, 17.65)
+axes[2].set_xlabel('g')
+axes[2].set_ylabel('r')
+axes[2].legend()
+axes[2].set_title('Ajuste lineal g vs r - Elípticas')
+
+plt.tight_layout()
+plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/ajustes_lineales_comparacion.pdf', dpi=300, bbox_inches='tight')
 plt.show()
- 
+
+#%%
+#---------- MAGNITUD ABSOLUTA VS z --------------------------------------------------------
+c=300000
+H0=75
+M_abs= df['r']-25-5*np.log10(c*df['z']/H0)
 
 
+def f(x):
+    f=a*np.log10(x+b)
 
+
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=df['z'],y=M_abs, alpha=0.6, label='Datos originales')
+#plt.plot(muestra['g'], y, color=color_r, alpha=0.8, label=f'Ajuste: r = {a:.3f}g + {b:.3f}')
+plt.xlim(-0.005,0.25)
+plt.ylim(-25,-5)
+plt.xlabel('$z$')
+plt.ylabel('$M_r$')
+plt.legend()
+plt.title('Magnitud absoluta en r vs $z$')
+plt.savefig('/mnt/sda2/astrometria/practico_3/informe/imagenes/mabs.pdf',dpi=300,bbox_inches='tight')
+plt.show()

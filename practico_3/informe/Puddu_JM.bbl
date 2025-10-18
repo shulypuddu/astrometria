@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{{Baldry} et~al.(2004)}]{2004Bimodalidad}
@@ -7,6 +7,10 @@
 \bibitem[{Carey et~al.(2016)}]{2016SciServer}
 Carey N.S., et~al., 2016, Integrating Materials and Manufacturing Innovation,
   5, 143
+
+\bibitem[{Hastie(2009)}]{libroimportante}
+Hastie T., 2009, The elements of statistical learning: data mining, inference,
+  and prediction
 
 \bibitem[{{Lintott} et~al.(2008)}]{galaxyzoo}
 {Lintott} C.J., et~al., 2008, \mnras, 389, 1179
@@ -19,5 +23,9 @@ Virtanen P., et~al., 2020, Scipy
 
 \bibitem[{{Williams} et~al.(2019)}]{zoovotes}
 {Williams} W.L., et~al., 2019, \aap, 622, A1
+
+\bibitem[{Zandivarez(2015)}]{zandivarez}
+Zandivarez A., 2015, Principios básicos de probabilidad y estadística para la
+  modelización de datos
 
 \end{thebibliography}
