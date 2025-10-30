@@ -9,7 +9,8 @@ def datos_lineal(n):
     a = 7
     b = 11
     eps = st.norm.rvs(loc=0, scale=2.5, size=n)  # ruido gaussiano
-    x   = st.uniform.rvs(loc=3, scale=10, size=n)  # x uniforme
+    x= np.linspace(0,10,n)
+    #    x   = st.uniform.rvs(loc=3, scale=10, size=n)  # x uniforme
     y = a*x+b + eps
 
     return x,y
@@ -55,7 +56,8 @@ def likelihood(datos,parametros,sigma,modelo):
     x_obs, y_obs = datos
     y_pred = modelo(x_obs, parametros)
     residuos = y_obs - y_pred
-    return np.sum(st.norm.logpdf(residuos, loc=0, scale=sigma))
+    return -(residuos**2).sum()
+#    return np.sum(st.norm.logpdf(residuos, loc=0, scale=sigma))
 
 
 def fun_lum(x,phi,M,alfa):
@@ -70,15 +72,15 @@ def fun_lum(x,phi,M,alfa):
     return l
 
 
-def log_post(modelo, datos,parametros):
+def log_post(modelo, datos,parametros,cota_inf,cota_sup):
     """
     Calculo el logaritmo de la probabilidad posterior
     """
-    prior= log_prior_cte(parametros,cota_inf=[5,5],cota_sup=[15,15])
+    prior= log_prior_cte(parametros,cota_inf=cota_inf,cota_sup=cota_sup)
     like= likelihood(datos, parametros, sigma=0.5, modelo=modelo)
     return like + prior
 
-def salto(parametros,cota_inf,cota_sup):
+def salto(parametros,cota_inf,cota_sup,alpha):
     """
     Genero un nuevo punto en el espacio de parametros
     """
@@ -88,10 +90,10 @@ def salto(parametros,cota_inf,cota_sup):
     #return nuevos_parametros
     nuevos_parametros = parametros.copy()
     for i in range(len(parametros)):
-        nuevos_parametros[i] += np.random.uniform(-1,1) *0.001* (cota_sup[i]-cota_inf[i])
+        nuevos_parametros[i] += np.random.uniform(-1,1) *alpha#* (cota_sup[i]-cota_inf[i])
     return nuevos_parametros # para el modelo lineal
 
-def cadena_mcmc(modelo, datos, N, parametros_iniciales,cota_inf,cota_sup):
+def cadena_mcmc(modelo, datos, N, parametros_iniciales,cota_inf,cota_sup,alpha):
     """
     Genero una cadena de Markov Monte Carlo
     """
@@ -99,9 +101,9 @@ def cadena_mcmc(modelo, datos, N, parametros_iniciales,cota_inf,cota_sup):
     cadena[0,:]= parametros_iniciales
     for i in range(1,N):
         parametros_actuales= cadena[i-1,:]
-        nuevos_parametros= salto(parametros_actuales,cota_inf,cota_sup)
-        p_actual= log_post(modelo, datos, parametros_actuales)
-        p_nuevo= log_post(modelo, datos, nuevos_parametros)
+        nuevos_parametros= salto(parametros_actuales,cota_inf,cota_sup,alpha)
+        p_actual= log_post(modelo, datos, parametros_actuales,cota_inf,cota_sup)
+        p_nuevo= log_post(modelo, datos, nuevos_parametros,cota_inf,cota_sup)
         if np.isneginf(p_nuevo): # descarto los parametros si quedan fuera de las cotas
             cadena[i,:]= parametros_actuales 
         else:
@@ -114,4 +116,4 @@ def cadena_mcmc(modelo, datos, N, parametros_iniciales,cota_inf,cota_sup):
                      cadena[i,:]= nuevos_parametros
                 else:
                     cadena[i,:]= parametros_actuales
-    return cadena[35]
+    return cadena
